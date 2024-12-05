@@ -1,11 +1,7 @@
-output "public_subnet_id" {
-  value = aws_subnet.public.id
+output "public_subnet_names" {
+  value = [for subnet in aws_subnet.public : subnet.tags["Name"]]
 }
 
-output "private_subnet_id" {
-  value = aws_subnet.private.id
-}
-
-output "vpc_id" {
-  value = aws_vpc.main.id
+output "private_subnet_names" {
+  value = [for subnet in aws_subnet.private : subnet.tags["Name"]]
 }
