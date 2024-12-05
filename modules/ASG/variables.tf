@@ -27,5 +27,5 @@ variable "asg_name" {
 }
 
 variable "target_group_arns" {
-  type = list
+  type = list(string)
 }
