@@ -5,8 +5,13 @@ resource "aws_vpc" "main" {
   }
 }
 
+locals {
+  public_subnet_map = zipmap(range(length(var.public_subnet_cidr)), var.public_subnet_cidr)
+  private_subnet_map = zipmap(range(length(var.private_subnet_cidr)), var.private_subnet_cidr)
+}
+
 resource "aws_subnet" "public" {
-  for_each                = toset(var.public_subnet_cidr)
+  for_each                = local.public_subnet_map
   vpc_id                  = aws_vpc.main.id
   cidr_block              = each.value
   availability_zone       = var.availability_zones[each.key % length(var.availability_zones)]
@@ -14,18 +19,16 @@ resource "aws_subnet" "public" {
   tags = {
     Name = "public-${each.value}-${var.availability_zones[each.key % length(var.availability_zones)]}"
   }
-
 }
 
 resource "aws_subnet" "private" {
-  for_each          = toset(var.private_subnet_cidr)
-  vpc_id            = aws_vpc.main.id
-  cidr_block        = each.value
-  availability_zone = var.availability_zones[each.key % length(var.availability_zones)]
+  for_each                = local.private_subnet_map
+  vpc_id                  = aws_vpc.main.id
+  cidr_block              = each.value
+  availability_zone       = var.availability_zones[each.key % length(var.availability_zones)]
   tags = {
     Name = "private-${each.value}-${var.availability_zones[each.key % length(var.availability_zones)]}"
   }
-
 }
 
 resource "aws_internet_gateway" "igw" {
