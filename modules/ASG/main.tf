@@ -17,6 +17,7 @@ resource "aws_autoscaling_group" "asg" {
   min_size             = 2
   vpc_zone_identifier  = var.asg_identifier_ids
   launch_configuration = aws_launch_configuration.launch_config.id
+  target_group_arns = [var.target_group_arns]
 }
 
 resource "aws_autoscaling_policy" "scale_out" {

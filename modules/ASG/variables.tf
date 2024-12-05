@@ -25,3 +25,7 @@ variable "asg_identifier_ids" {
 variable "asg_name" {
   type = string
 }
+
+variable "target_group_arns" {
+  type = list
+}
